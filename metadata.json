@@ -1,0 +1,6 @@
+{
+  "name": "Standards Recommendation Engine",
+  "description": "Smart recommendation system matching products with relevant Indian Standards (IS/BIS) using TF-IDF vectorization and Cosine Similarity ranking (SIH26108).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
