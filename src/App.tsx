@@ -14,6 +14,7 @@ import { ExportModal } from './components/ExportModal';
 
 import { globalRecommendationEngine } from './services/tfidfEngine';
 import { StorageService } from './services/storageService';
+import { isApiConfigured, StandardsApi } from './services/apiService';
 import { 
   Standard, 
   RecommendationResult, 
@@ -65,13 +66,25 @@ export function App() {
   const [recommendations, setRecommendations] = useState<RecommendationResult[]>([]);
   const [executionTimeMs, setExecutionTimeMs] = useState(0);
 
+  // Load the shared catalogue when an API endpoint is configured.
+  useEffect(() => {
+    if (!isApiConfigured) return;
+
+    StandardsApi.listStandards()
+      .then((remoteStandards) => {
+        setStandards(remoteStandards);
+        void handlePerformSearch(query);
+      })
+      .catch((error) => console.warn('Backend unavailable; using local catalogue', error));
+  }, []);
+
   // Initialize engine with loaded standards
   useEffect(() => {
     globalRecommendationEngine.fit(standards);
   }, [standards]);
 
   // Execute recommendation
-  const handlePerformSearch = useCallback((searchQuery: string) => {
+  const handlePerformSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setRecommendations([]);
       setExecutionTimeMs(0);
@@ -81,13 +94,25 @@ export function App() {
     setIsSearching(true);
     const startTime = performance.now();
 
-    const output = globalRecommendationEngine.recommend(searchQuery, {
+    const options = {
       category: selectedCategory !== 'All Categories' ? selectedCategory : undefined,
       industry: selectedIndustry !== 'All Industries' ? selectedIndustry : undefined,
       status: selectedStatus !== 'All Statuses' ? selectedStatus : undefined,
-      minScore: minScore,
-      topK: topK
-    });
+      minScore,
+      topK
+    };
+    let output: { results: RecommendationResult[]; executionTimeMs: number };
+
+    if (isApiConfigured) {
+      try {
+        output = await StandardsApi.recommend(searchQuery, options);
+      } catch (error) {
+        console.warn('Backend unavailable; using local recommendation engine', error);
+        output = globalRecommendationEngine.recommend(searchQuery, options);
+      }
+    } else {
+      output = globalRecommendationEngine.recommend(searchQuery, options);
+    }
 
     const elapsed = Math.round(performance.now() - startTime);
     setRecommendations(output.results);
