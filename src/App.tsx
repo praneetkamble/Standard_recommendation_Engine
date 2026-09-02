@@ -19,6 +19,7 @@ import {
   RecommendationResult, 
   SearchHistoryItem 
 } from './types/standards';
+import { useI18n } from './context/I18nContext';
 
 import { 
   ArrowUpDown, 
@@ -35,6 +36,8 @@ import {
 } from 'lucide-react';
 
 export function App() {
+  const { t } = useI18n();
+
   // Navigation State
   const [activeTab, setActiveTab] = useState<'search' | 'catalogue' | 'analytics' | 'judge' | 'ai' | 'pitch'>('search');
 
@@ -263,7 +266,7 @@ export function App() {
                 <div className="flex flex-wrap items-end justify-between pb-3 border-b border-slate-200 gap-3">
                   <div>
                     <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-slate-900">
-                      Ranked Recommendations ({filteredAndSortedResults.length})
+                      {t.rankedStandards} ({filteredAndSortedResults.length})
                     </h3>
                     <p className="text-[11px] font-mono text-slate-500 uppercase mt-0.5">
                       Algorithm: Sublinear TF-IDF + Cosine Similarity
@@ -279,9 +282,9 @@ export function App() {
                         onChange={(e) => setSortBy(e.target.value as any)}
                         className="bg-transparent font-bold uppercase text-[10px] tracking-wider text-slate-800 outline-none cursor-pointer"
                       >
-                        <option value="relevance">Sort: Relevance</option>
-                        <option value="code">Sort: Code (A-Z)</option>
-                        <option value="year">Sort: Year (Newest)</option>
+                        <option value="relevance">{t.sortRelevance}</option>
+                        <option value="code">{t.sortCode}</option>
+                        <option value="year">{t.sortYear}</option>
                       </select>
                     </div>
 
@@ -292,7 +295,7 @@ export function App() {
                         className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-3 py-1.5 rounded-xs shadow-xs transition-colors cursor-pointer"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        <span>Export</span>
+                        <span>{t.exportDossier}</span>
                       </button>
                     )}
                   </div>
@@ -303,16 +306,16 @@ export function App() {
                   <div className="bg-white border border-slate-200 p-12 text-center shadow-xs rounded-xs">
                     <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
                     <h3 className="text-lg font-serif font-bold text-slate-900 mb-1">
-                      No Standards Met the Similarity Threshold
+                      {t.noResults}
                     </h3>
                     <p className="text-xs text-slate-500 max-w-md mx-auto mb-4 leading-relaxed">
-                      Try lowering the confidence threshold slider or using broader keywords like "cable", "water", "pump", "cement", "mask", or "bulb".
+                      {t.noResultsSub}
                     </p>
                     <button
                       onClick={handleResetFilters}
                       className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-slate-900 text-white px-5 py-2.5 rounded-xs hover:bg-slate-800 cursor-pointer transition-colors"
                     >
-                      Reset All Filters
+                      {t.resetFilters}
                     </button>
                   </div>
                 ) : (
@@ -366,7 +369,7 @@ export function App() {
 
         {/* Tab 6: Hackathon Team & Presentation Pitch */}
         {activeTab === 'pitch' && (
-          <TeamPitch />
+          <TeamPitch onNavigateTab={setActiveTab} />
         )}
       </main>
 

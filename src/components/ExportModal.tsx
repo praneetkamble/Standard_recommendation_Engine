@@ -10,6 +10,7 @@ import {
   Check, 
   Copy 
 } from 'lucide-react';
+import { useI18n } from '../context/I18nContext';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   results
 }) => {
   const [copied, setCopied] = React.useState(false);
+  const { t } = useI18n();
 
   if (!isOpen) return null;
 
@@ -59,7 +61,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         <div className="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-2">
             <Download className="w-4 h-4 text-amber-400" />
-            <h3 className="font-serif font-bold text-base">Export Recommendation Dossier</h3>
+            <h3 className="font-serif font-bold text-base">{t.exportDossier}</h3>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white p-1 rounded-xs hover:bg-slate-800 cursor-pointer">
             <X className="w-5 h-5" />
@@ -89,7 +91,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 </div>
                 <div>
                   <span className="font-serif font-bold text-slate-900 block text-xs">
-                    Download CSV Spreadsheet
+                    {t.downloadCsv}
                   </span>
                   <span className="text-[11px] text-slate-500">
                     Tabular report for Excel / Google Sheets
@@ -109,7 +111,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 </div>
                 <div>
                   <span className="font-serif font-bold text-slate-900 block text-xs">
-                    Print / Save as PDF
+                    {t.printSpec}
                   </span>
                   <span className="text-[11px] text-slate-500">
                     Formatted standards compliance dossier
@@ -129,7 +131,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 </div>
                 <div>
                   <span className="font-serif font-bold text-slate-900 block text-xs">
-                    Copy Structured JSON
+                    {t.copyJson}
                   </span>
                   <span className="text-[11px] text-slate-500">
                     Full programmatic API payload
@@ -146,7 +148,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             onClick={onClose}
             className="text-[10px] font-bold uppercase tracking-wider bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xs cursor-pointer transition-colors"
           >
-            Close
+            {t.closeModal}
           </button>
         </div>
       </div>

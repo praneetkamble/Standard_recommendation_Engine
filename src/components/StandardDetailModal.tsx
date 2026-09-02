@@ -17,6 +17,7 @@ import {
   Building,
   Calendar
 } from 'lucide-react';
+import { useI18n } from '../context/I18nContext';
 
 interface StandardDetailModalProps {
   standard: Standard | null;
@@ -30,6 +31,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
   onOpenAiAdvisor
 }) => {
   const [copied, setCopied] = useState(false);
+  const { t } = useI18n();
 
   if (!standard) return null;
 
@@ -59,7 +61,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
               <button
                 onClick={handleCopyCode}
                 className="p-1 text-slate-400 hover:text-white rounded-xs transition-colors cursor-pointer"
-                title="Copy Standard Code"
+                title={t.copyCode}
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               </button>
@@ -94,7 +96,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-0">
             <div className="bg-[#fafaf7] p-3.5 rounded-xs border border-slate-200">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
-                Category
+                {t.filterCategory}
               </span>
               <span className="font-serif font-bold text-slate-900 text-xs sm:text-sm">
                 {standard.category}
@@ -103,7 +105,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
 
             <div className="bg-[#fafaf7] p-3.5 rounded-xs border border-slate-200">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
-                Industry Sector
+                {t.filterIndustry}
               </span>
               <span className="font-serif font-bold text-slate-900 text-xs sm:text-sm">
                 {standard.industry}
@@ -133,7 +135,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
           <div className="pt-4">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest font-mono flex items-center gap-1.5 mb-2">
               <BookOpen className="w-4 h-4 text-slate-800" />
-              <span>Standard Scope &amp; Applicable Products</span>
+              <span>{t.modalScopeTitle}</span>
             </h3>
             <p className="text-slate-700 leading-relaxed text-xs sm:text-sm bg-[#fafaf7] p-4 rounded-xs border border-slate-200 mb-2 font-serif">
               {standard.scope || standard.description}
@@ -148,7 +150,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
           <div className="pt-4">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest font-mono flex items-center gap-1.5 mb-2.5">
               <FlaskConical className="w-4 h-4 text-emerald-700" />
-              <span>Mandatory Testing &amp; Quality Parameters</span>
+              <span>{t.modalTestingTitle}</span>
             </h3>
             {standard.test_parameters && standard.test_parameters.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -168,7 +170,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
           <div className="pt-4">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest font-mono flex items-center gap-1.5 mb-2">
               <Tag className="w-4 h-4 text-slate-800" />
-              <span>Indexing Keywords &amp; Vocabulary</span>
+              <span>{t.modalKeywordsTitle}</span>
             </h3>
             <div className="flex flex-wrap gap-1.5 mb-3">
               {standard.keywords.map((kw, i) => (
@@ -207,7 +209,7 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
             className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-amber-400 text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-xs shadow-xs transition-colors cursor-pointer border border-slate-800"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Ask AI Compliance Advisor</span>
+            <span>{t.askAi}</span>
           </button>
 
           <div className="flex items-center space-x-2">
@@ -216,14 +218,14 @@ export const StandardDetailModal: React.FC<StandardDetailModalProps> = ({
               className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-700 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-50 px-3 py-2 rounded-xs transition-colors cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print Specification</span>
+              <span>{t.printSpec}</span>
             </button>
 
             <button
               onClick={onClose}
               className="text-[10px] font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-200 bg-slate-100 px-4 py-2 rounded-xs transition-colors cursor-pointer"
             >
-              Close
+              {t.closeModal}
             </button>
           </div>
         </div>

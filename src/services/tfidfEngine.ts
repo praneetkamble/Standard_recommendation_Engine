@@ -1,4 +1,5 @@
 import { Standard, RecommendationResult, TermContribution, TestCaseResult } from '../types/standards';
+import { expandMultilingualQuery } from './i18nService';
 
 /**
  * Standard English & Domain Stopwords
@@ -48,7 +49,7 @@ export function tokenize(text: string): string[] {
   if (!text) return [];
   const rawWords = text
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, ' ')
+    .replace(/[^\p{L}\p{N}\s-]/gu, ' ')
     .split(/[\s-]+/)
     .filter(Boolean);
 
@@ -190,7 +191,8 @@ export class TfidfRecommendationEngine {
     }
 
     const { category, industry, status, minScore = 0.05, topK = 10 } = options;
-    const queryTokens = tokenize(query);
+    const expandedQuery = expandMultilingualQuery(query);
+    const queryTokens = tokenize(expandedQuery);
 
     if (queryTokens.length === 0) {
       return {
@@ -436,6 +438,24 @@ export class TfidfRecommendationEngine {
         expectedStandardCode: 'IS 16221 (Part 2):2015',
         expectedMinScore: 0.40,
         notes: 'Verifies renewable energy solar converter standard matches complex compound query'
+      },
+      {
+        id: 'test-8',
+        name: 'Indic Cross-Lingual Hindi Match (बिजली का तार)',
+        type: 'exact',
+        query: 'घरेलू बिजली का तार (PVC wire)',
+        expectedStandardCode: 'IS 694:2010',
+        expectedMinScore: 0.50,
+        notes: 'Verifies Devanagari Hindi search terms are cross-lingually matched to IS 694:2010'
+      },
+      {
+        id: 'test-9',
+        name: 'Indic Cross-Lingual Marathi/Gujarati Match (पाणी / પાણી)',
+        type: 'exact',
+        query: 'पॅक केलेले पिण्याचे पाणी (Drinking Water)',
+        expectedStandardCode: 'IS 14543:2018',
+        expectedMinScore: 0.45,
+        notes: 'Verifies regional language query maps accurately to Packaged Drinking Water standard'
       }
     ];
 

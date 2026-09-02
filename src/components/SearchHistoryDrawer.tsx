@@ -10,6 +10,7 @@ import {
   Clock,
   Download
 } from 'lucide-react';
+import { useI18n } from '../context/I18nContext';
 
 interface SearchHistoryDrawerProps {
   isOpen: boolean;
@@ -26,6 +27,8 @@ export const SearchHistoryDrawer: React.FC<SearchHistoryDrawerProps> = ({
   onSelectQuery,
   onClearHistory
 }) => {
+  const { t } = useI18n();
+
   if (!isOpen) return null;
 
   const formatDate = (isoStr: string) => {
@@ -57,7 +60,7 @@ export const SearchHistoryDrawer: React.FC<SearchHistoryDrawerProps> = ({
         <div className="p-5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-2">
             <History className="w-4 h-4 text-amber-400" />
-            <h2 className="font-serif font-bold text-base">Search History ({history.length})</h2>
+            <h2 className="font-serif font-bold text-base">{t.historyTitle} ({history.length})</h2>
           </div>
           <button
             onClick={onClose}
@@ -72,8 +75,8 @@ export const SearchHistoryDrawer: React.FC<SearchHistoryDrawerProps> = ({
           {history.length === 0 ? (
             <div className="text-center py-12 text-slate-400 text-sm">
               <Clock className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-              <p className="font-serif font-bold text-slate-700">No past search queries yet.</p>
-              <p className="text-xs text-slate-400 mt-1">Search for any product to build SQLite search history.</p>
+              <p className="font-serif font-bold text-slate-700">{t.noHistory}</p>
+              <p className="text-xs text-slate-400 mt-1">{t.noHistorySub}</p>
             </div>
           ) : (
             history.map((item) => (
@@ -128,7 +131,7 @@ export const SearchHistoryDrawer: React.FC<SearchHistoryDrawerProps> = ({
               className="text-[10px] uppercase tracking-wider text-red-700 hover:text-red-900 font-bold flex items-center gap-1 cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>Clear History</span>
+              <span>{t.clearHistory}</span>
             </button>
           </div>
         )}

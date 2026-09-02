@@ -97,10 +97,10 @@ export const JudgeInspector: React.FC = () => {
               <span className={`w-2.5 h-2.5 rounded-full ${allPassed ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
               <div>
                 <span className="text-sm font-serif font-bold text-slate-900 block">
-                  {allPassed ? 'All 7 Test Scenarios Validated Deterministically' : 'Some Tests Failed'}
+                  {allPassed ? `All ${testResults.length} Test Scenarios (Including Multilingual Indic Queries) Validated` : 'Some Tests Failed'}
                 </span>
                 <span className="text-xs text-slate-500 block">
-                  Checks exact product matches, partial token overlap, unrelated queries, and edge cases.
+                  Checks exact product matches, partial token overlap, Indic multilingual inputs, and edge cases.
                 </span>
               </div>
             </div>

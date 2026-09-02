@@ -12,6 +12,7 @@ import {
   Layers,
   ArrowUpRight
 } from 'lucide-react';
+import { useI18n } from '../context/I18nContext';
 
 interface RecommendationCardProps {
   result: RecommendationResult;
@@ -26,6 +27,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [showMath, setShowMath] = useState(false);
+  const { t } = useI18n();
   const { standard, score, percentage, rank, matchedKeywords, explanation, tfidfBreakdown } = result;
 
   const handleCopyCode = (e: React.MouseEvent) => {
@@ -39,20 +41,20 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
     if (rank === 1) {
       return (
         <span className="inline-block px-2.5 py-0.5 bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200 rounded-xs uppercase tracking-wider">
-          ★ Top Match • Rank #1
+          ★ {t.topMatch} • Rank #1
         </span>
       );
     }
     if (percentage >= 50) {
       return (
         <span className="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold border border-slate-200 rounded-xs uppercase tracking-wider">
-          Rank #{rank} • High Similarity
+          Rank #{rank} • {t.highMatch}
         </span>
       );
     }
     return (
       <span className="inline-block px-2.5 py-0.5 bg-slate-50 text-slate-500 text-[10px] font-bold border border-slate-200 rounded-xs uppercase tracking-wider">
-        Rank #{rank} • Partial Match
+        Rank #{rank} • {t.mediumMatch}
       </span>
     );
   };
@@ -62,7 +64,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       return (
         <span className="text-xs font-semibold text-red-700 uppercase flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
-          Mandatory ISI Mark
+          {t.mandatoryMark}
         </span>
       );
     }
@@ -70,14 +72,14 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       return (
         <span className="text-xs font-semibold text-amber-700 uppercase flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-          CRS Scheme
+          {t.crsMark}
         </span>
       );
     }
     return (
       <span className="text-xs font-semibold text-slate-600 uppercase flex items-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-        Voluntary Standard
+        {t.voluntaryStandard}
       </span>
     );
   };
@@ -113,7 +115,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             <button
               onClick={handleCopyCode}
               className="p-1 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
-              title="Copy Standard Code"
+              title={t.copyCode}
             >
               {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
             </button>
@@ -129,7 +131,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             {percentage}%
           </span>
           <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest block mt-1">
-            Score: {score.toFixed(3)}
+            {t.matchScore}: {score.toFixed(3)}
           </span>
         </div>
       </div>
@@ -142,15 +144,15 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       {/* Editorial Metadata Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-3.5 border-t border-b border-slate-100 mb-3 text-xs">
         <div>
-          <p className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Product Category</p>
+          <p className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">{t.filterCategory}</p>
           <p className="text-xs font-semibold text-slate-800 uppercase truncate">{standard.category}</p>
         </div>
         <div>
-          <p className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Industry Sector</p>
+          <p className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">{t.filterIndustry}</p>
           <p className="text-xs font-semibold text-slate-800 uppercase truncate">{standard.industry}</p>
         </div>
         <div>
-          <p className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Regulatory Scheme</p>
+          <p className="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">{t.filterStatus}</p>
           <div>{getStatusDisplay(standard.status)}</div>
         </div>
         <div>
@@ -162,7 +164,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       {/* Why Recommended Note */}
       <div className="bg-[#fafaf7] border border-slate-200 rounded-xs p-3 mb-3 text-xs">
         <p className="text-slate-700 leading-normal">
-          <strong className="text-slate-900 uppercase text-[10px] tracking-widest mr-1 font-bold">Why Recommended:</strong>
+          <strong className="text-slate-900 uppercase text-[10px] tracking-widest mr-1 font-bold">{t.whyRecommended}:</strong>
           <span>{explanation}</span>
         </p>
       </div>
@@ -225,14 +227,14 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
           className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-900 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xs transition-colors cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-          <span>AI Compliance Roadmap</span>
+          <span>{t.askAi}</span>
         </button>
 
         <button
           onClick={() => onOpenDetails(standard)}
           className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-900 hover:text-slate-700 transition-colors cursor-pointer group-hover:underline"
         >
-          <span>Full Standard Dossier</span>
+          <span>{t.viewDetails}</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </button>
       </div>

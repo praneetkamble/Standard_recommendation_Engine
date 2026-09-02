@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Cpu
 } from 'lucide-react';
+import { useI18n } from '../context/I18nContext';
 
 interface AiComplianceAssistantProps {
   standards: Standard[];
@@ -25,6 +26,7 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
   selectedStandard,
   onSelectStandard
 }) => {
+  const { t, language } = useI18n();
   const [selectedStdId, setSelectedStdId] = useState<string>(selectedStandard?.id || standards[0]?.id || '');
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
   const handleGenerateAdvisor = async (type: 'checklist' | 'testing' | 'roadmap' | 'custom') => {
     setLoading(true);
 
-    // Simulate AI synthesis or call API if available
+    // Multilingual synthesis engine
     setTimeout(() => {
       let output = '';
       if (!currentStandard) {
@@ -43,8 +45,48 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
         return;
       }
 
-      if (type === 'checklist') {
-        output = `### 📋 Manufacturing & Factory Compliance Checklist for ${currentStandard.standard_code}
+      if (language === 'hi') {
+        if (type === 'checklist') {
+          output = `### 📋 ${currentStandard.standard_code} के लिए कारखाना निर्माण एवं गुणवत्ता चेकलिस्ट
+**उत्पाद:** ${currentStandard.product}  
+**नियामक योजना:** ${currentStandard.status}
+
+1. **कच्चा माल नियंत्रण:** ${currentStandard.standard_code} के प्रावधानों के अनुसार आने वाले सभी कच्चे माल के परीक्षण प्रमाण पत्र सत्यापित करें।
+2. **इन-हाउस प्रयोगशाला स्थापना:** सुनिश्चित करें कि कारखाने में निम्नलिखित परीक्षण उपकरण कैलिब्रेटेड हैं:
+   ${currentStandard.test_parameters.map(test => `   - ${test}`).join('\n')}
+3. **गुणवत्ता नियंत्रण कर्मी:** परीक्षण और निरीक्षण योजना (STI) के लिए समर्पित QA इंजीनियर नियुक्त करें।
+4. **मार्किंग एवं पैकेजिंग:** पैकेजिंग पर स्पष्ट रूप से मानक चिन्ह (ISI / CRS मार्क), लाइसेंस नंबर (CM/L), और बैच ट्रैकिंग प्रदर्शित होना चाहिए।
+5. **निगरानी ऑडिट तैयारी:** इन-हाउस नियमित परीक्षण परिणामों और नमूना प्रतिधारण का 6 महीने का रिकॉर्ड बनाए रखें।`;
+        } else if (type === 'testing') {
+          output = `### 🧪 प्रयोगशाला परीक्षण प्रोटोकॉल विवरण (${currentStandard.standard_code})
+**शीर्षक:** ${currentStandard.title}
+
+- **अनिवार्य परीक्षण पैरामीटर:**
+  ${currentStandard.test_parameters.map((test, idx) => `  ${idx + 1}. **${test}:** मानक परिवेश परीक्षण स्थितियों (27°C ± 2°C) के तहत अनिवार्य सत्यापन।`).join('\n')}
+
+- **स्वीकृति गुणवत्ता सीमा (AQL):** IS 2500 प्रतिचयन योजना के अनुसार बैच नमूनाकरण।
+- **अंतरराष्ट्रीय मानकीकरण:** ${currentStandard.harmonized_standard || 'राष्ट्रीय बीआईएस मानक (National BIS)'}
+- **विफलता प्रोटोकॉल:** सुरक्षा या विषाक्तता परीक्षणों में किसी भी विफलता पर संपूर्ण बैच को तुरंत अस्वीकार कर दिया जाता है।`;
+        } else if (type === 'roadmap') {
+          output = `### 🚀 ${currentStandard.product.split(',')[0]} के लिए बीआईएस (BIS) लाइसेंसिंग रोडमैप
+
+1. **चरण 1 - मानक अंतर विश्लेषण:** ${currentStandard.standard_code} के मुकाबले मौजूदा विनिर्माण विशिष्टताओं की तुलना करें।
+2. **चरण 2 - ऑनलाइन पोर्टल आवेदन:** तकनीकी रेखाचित्रों और परीक्षण रिपोर्ट के साथ BIS मानकऑनलाइन पोर्टल (Manakonline) पर फॉर्म-V जमा करें।
+3. **चरण 3 - फैक्ट्री निरीक्षण:** बीआईएस अधिकारी विनिर्माण मशीनरी और प्रयोगशाला क्षमताओं का सत्यापन करने के लिए आते हैं।
+4. **चरण 4 - स्वतंत्र नमूना परीक्षण:** निरीक्षण में लिए गए नमूने NABL मान्यता प्राप्त तृतीय-पक्ष परीक्षण प्रयोगशालाओं को भेजे जाते हैं।
+5. **चरण 5 - लाइसेंस अनुदान (ISI / CRS):** संतोषजनक परीक्षण परिणामों पर, BIS आधिकारिक CM/L लाइसेंस प्रदान करता है।`;
+        } else {
+          output = `### 💡 अनुपालन मूल्यांकन: "${question}"
+**लागू मानक:** ${currentStandard.standard_code} (${currentStandard.title})
+
+- **प्रयोज्यता:** यह प्रश्न ${currentStandard.category} विनियामक मानकों के अनुरूप है।
+- **मुख्य आवश्यकता:** भारत में व्यावसायिक वितरण से पहले निर्माताओं को अनिवार्य ${currentStandard.status} प्रावधानों का पालन करना होगा।
+- **सुझाया गया अगला कदम:** प्रमाणित NABL परीक्षण प्रयोगशाला के साथ ${currentStandard.test_parameters[0] || 'परीक्षण पैरामीटर'} की समीक्षा करें।`;
+        }
+      } else {
+        // English Default
+        if (type === 'checklist') {
+          output = `### 📋 Manufacturing & Factory Compliance Checklist for ${currentStandard.standard_code}
 **Product:** ${currentStandard.product}  
 **Mandate Scheme:** ${currentStandard.status}
 
@@ -54,8 +96,8 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
 3. **Quality Control Personnel:** Appoint dedicated Quality Assurance engineer responsible for Scheme of Testing and Inspection (STI).
 4. **Marking & Packaging:** Product packaging must prominently display the Standard Mark (ISI / CRS logo), License Number (CM/L), and batch tracking identifiers.
 5. **Surveillance Audit Readiness:** Maintain 6-month log of in-house routine test results and sample retention racks.`;
-      } else if (type === 'testing') {
-        output = `### 🧪 Laboratory Testing Protocol Breakdown (${currentStandard.standard_code})
+        } else if (type === 'testing') {
+          output = `### 🧪 Laboratory Testing Protocol Breakdown (${currentStandard.standard_code})
 **Title:** ${currentStandard.title}
 
 - **Primary Test Objectives:**
@@ -64,26 +106,27 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
 - **Acceptance Quality Limit (AQL):** Standard batch sampling per IS 2500 sampling plan.
 - **Harmonized International Standard:** ${currentStandard.harmonized_standard || 'National BIS Standard'}
 - **Failure Protocol:** Any failure in high-voltage / impact / toxicity tests leads to immediate batch rejection and quarantine.`;
-      } else if (type === 'roadmap') {
-        output = `### 🚀 Step-by-Step BIS Certification Roadmap for ${currentStandard.product.split(',')[0]}
+        } else if (type === 'roadmap') {
+          output = `### 🚀 Step-by-Step BIS Certification Roadmap for ${currentStandard.product.split(',')[0]}
 
 1. **Step 1 - Standard Gap Analysis:** Compare existing production specifications against ${currentStandard.standard_code}.
 2. **Step 2 - Online Portal Application:** Submit Form-V on the BIS Manakonline portal with technical drawings and raw material test reports.
 3. **Step 3 - Factory Audit:** BIS inspection officer visits manufacturing premises to verify manufacturing machinery, quality control, and laboratory test capabilities.
 4. **Step 4 - Independent Sample Testing:** Official samples drawn during audit are sent to BIS-approved NABL accredited third-party test labs.
 5. **Step 5 - Grant of License (ISI / CRS):** Upon satisfactory test results, BIS issues the official CM/L license allowing standard marking.`;
-      } else {
-        output = `### 💡 Compliance Assessment for: "${question}"
+        } else {
+          output = `### 💡 Compliance Assessment for: "${question}"
 **Applicable Standard:** ${currentStandard.standard_code} (${currentStandard.title})
 
 - **Applicability:** The query aligns with ${currentStandard.category} regulatory standards.
 - **Key Requirement:** Manufacturers must comply with mandatory ${currentStandard.status} provisions before commercial retail distribution in India.
 - **Recommended Next Step:** Review ${currentStandard.test_parameters[0] || 'specification parameters'} with certified NABL test partner.`;
+        }
       }
 
       setAnalysisResult(output);
       setLoading(false);
-    }, 450);
+    }, 350);
   };
 
   return (
@@ -93,18 +136,18 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
         <div>
           <div className="flex items-center gap-2 text-amber-600 text-[10px] font-bold mb-1 uppercase tracking-widest font-mono">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>AI Regulatory &amp; Compliance Advisor</span>
+            <span>{t.tabAiAdvisor}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 tracking-tight">
-            Standards Compliance &amp; Testing Guide
+            {t.aiTitle}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Synthesizes statutory testing requirements, factory quality checklists, and BIS licensing roadmaps for any standard.
+            {t.aiSubtitle}
           </p>
         </div>
 
         <div className="flex items-center gap-2 bg-[#fafaf7] p-2 rounded-xs border border-slate-200 text-xs">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">Select Standard:</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">{t.aiSelectStandard}:</span>
           <select
             value={selectedStdId}
             onChange={(e) => {
@@ -131,7 +174,7 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
         >
           <div className="flex items-center gap-2 text-slate-900 font-serif font-bold text-sm mb-1">
             <FileCheck className="w-4 h-4 text-slate-800" />
-            <span>Factory Quality Checklist</span>
+            <span>{t.btnFactoryChecklist}</span>
           </div>
           <p className="text-xs text-slate-500">
             Generate in-house inspection and raw material verification points.
@@ -145,7 +188,7 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
         >
           <div className="flex items-center gap-2 text-slate-900 font-serif font-bold text-sm mb-1">
             <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-            <span>Laboratory Testing Protocol</span>
+            <span>{t.btnLabProtocol}</span>
           </div>
           <p className="text-xs text-slate-500">
             Detailed breakdown of compulsory physical &amp; chemical test methods.
@@ -159,7 +202,7 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
         >
           <div className="flex items-center gap-2 text-slate-900 font-serif font-bold text-sm mb-1">
             <ArrowRight className="w-4 h-4 text-amber-600" />
-            <span>BIS Licensing Roadmap</span>
+            <span>{t.btnBisRoadmap}</span>
           </div>
           <p className="text-xs text-slate-500">
             Step-by-step regulatory certification roadmap for manufacturers.
@@ -230,3 +273,4 @@ export const AiComplianceAssistant: React.FC<AiComplianceAssistantProps> = ({
     </div>
   );
 };
+
