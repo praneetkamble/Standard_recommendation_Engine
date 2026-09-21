@@ -83,28 +83,4 @@ The engine includes 7 automated unit tests covering all edge conditions:
 
 ---
 
-## 🎤 3-Minute Judge Demonstration Script
 
-1. **The Hook (0:00 - 0:30)**:
-   > *"Good morning respected judges. India has over 20,000 national standards, but MSME manufacturers struggle to identify which IS/BIS codes apply to their products. For Problem Statement #42 (SIH26108), our team built the Standards Recommendation Engine."*
-2. **Live Search Demo (0:30 - 1:15)**:
-   > *"Let's enter a real-world product: 'Electrical cable for domestic use'. Within 2 milliseconds, our TF-IDF cosine engine ranks IS 694:2010 at 94% relevance. Notice the 'Why Recommended' breakdown explaining exact token matches ('cable', 'domestic', 'pvc')."*
-3. **Drill Down & Filters (1:15 - 1:45)**:
-   > *"Clicking on IS 694 reveals technical testing parameters (Conductor resistance, Flame retardance) and Mandatory ISI Mark status. We can filter by industry or adjust minimum confidence thresholds."*
-4. **Judge Inspector & Math (1:45 - 2:30)**:
-   > *"In our 'Judge & ML Inspector' tab, we expose the exact TF-IDF term weights, matrix cosine angle calculation, and 7 live unit tests validating exact, partial, and negative matches."*
-5. **Future Roadmap (2:30 - 3:00)**:
-   > *"In Phase 2, this scales to all 20,000+ Bureau of Indian Standards using hybrid dense embeddings and multilingual voice search in 12 Indian regional languages."*
-
----
-
-## ❓ Frequently Asked Judge Q&A
-
-**Q1: Why did you choose TF-IDF + Cosine Similarity over an LLM API?**
-- **A**: TF-IDF is 100% deterministic, ultra-fast (<2ms response time), requires zero external API costs, works completely offline without network latency, and prevents hallucination of fake standard numbers.
-
-**Q2: How do you handle non-standard vocabulary or synonyms?**
-- **A**: We apply custom morphological stemming, domain-specific synonym expansion in the catalogue schema (`keywords` and `related_products`), and weighted multi-field aggregation.
-
-**Q3: How will this scale to 25,000+ Indian Standards?**
-- **A**: The document matrix for 25,000 standards consumes less than 15 MB in memory. With inverted indexing and sparse matrices (Scipy / SQLite FTS5), cosine similarity runs in under 15ms at full national scale.
